@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Webhook Button</title>
+</head>
+<body>
+  <h2>Button pressed <span id="count">0</span> times</h2>
+  <button onclick="sendWebhook()">Send to Discord</button>
+
+  <script>
+    const webhookURL = "https://discord.com/api/webhooks/1375755451349864469/UI5o8syY75PCZh5lU7RNduWuTuqB9X0nIXX1j9yI5sqPu-E7Q95A3YbZvRVIBd5tDat0"; // Replace this
+
+    // Load count from localStorage
+    let count = localStorage.getItem("clickCount");
+    if (!count) count = 0;
+    document.getElementById("count").innerText = count;
+
+    function sendWebhook() {
+      // Send webhook
+      fetch(webhookURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          content: `Button clicked! Count is now ${++count}`
+        })
+      }).then(response => {
+        if (response.ok) {
+          // Update local count
+          localStorage.setItem("clickCount", count);
+          document.getElementById("count").innerText = count;
+        } else {
+          alert("Failed to send webhook.");
+        }
+      }).catch(error => {
+        alert("Error sending webhook.");
+        console.error(error);
+      });
+    }
+  </script>
+</body>
+</html>
